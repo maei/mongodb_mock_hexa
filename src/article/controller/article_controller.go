@@ -4,17 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/labstack/echo/v4"
-	"github.com/maei/mongodb_mock_hexa/src/article"
+	"github.com/maei/mongodb_mock_hexa/src/domain"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 type ArticleController struct {
-	ArticleService article.ServiceArticleInterface
+	ArticleService domain.ServiceArticleInterface
 }
 
-func NewArticleController(e *echo.Echo, art article.ServiceArticleInterface) {
+func NewArticleController(e *echo.Echo, art domain.ServiceArticleInterface) {
 	handler := &ArticleController{
 		ArticleService: art,
 	}
@@ -35,7 +35,7 @@ func (a *ArticleController) PostArticle(c echo.Context) error {
 		})
 
 	}
-	art := &article.Article{}
+	art := &domain.Article{}
 
 	artErr := json.Unmarshal(bs, art)
 	if artErr != nil {

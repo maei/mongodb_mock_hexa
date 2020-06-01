@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/labstack/echo/v4"
-	_articleService "github.com/maei/mongodb_mock_hexa/src/article"
+	"github.com/maei/mongodb_mock_hexa/src/article/controller"
+	"github.com/maei/mongodb_mock_hexa/src/article/repository"
+	"github.com/maei/mongodb_mock_hexa/src/article/usecase"
 	"github.com/maei/mongodb_mock_hexa/src/clients/mongodb"
-	_articleHttpDelivery "github.com/maei/mongodb_mock_hexa/src/controller"
-	_articleRepository "github.com/maei/mongodb_mock_hexa/src/repository"
 	"log"
 	"os"
 	"os/signal"
@@ -29,9 +29,9 @@ func main() {
 	}
 	e := echo.New()
 
-	articleRepo := _articleRepository.NewMongoArticleRepository(client, mongoTimeout, mongoDB, mongoColl)
-	articleUseCase := _articleService.NewServiceArticle(articleRepo, nil)
-	_articleHttpDelivery.NewArticleController(e, articleUseCase)
+	articleRepo := repository.NewMongoArticleRepository(client, mongoTimeout, mongoDB, mongoColl)
+	articleUseCase := usecase.NewServiceArticle(articleRepo, nil)
+	controller.NewArticleController(e, articleUseCase)
 
 	errs := make(chan error, 2)
 	go func() {

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"errors"
-	"github.com/maei/mongodb_mock_hexa/src/article"
+	"github.com/maei/mongodb_mock_hexa/src/domain"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"time"
@@ -16,7 +16,7 @@ type mongoArticleRepository struct {
 	collection string
 }
 
-func NewMongoArticleRepository(client *mongo.Client, mongoTimeout int, mongoDB string, mongoColl string) article.DAOInterfaceArticle {
+func NewMongoArticleRepository(client *mongo.Client, mongoTimeout int, mongoDB string, mongoColl string) domain.DAOInterfaceArticle {
 	return &mongoArticleRepository{
 		client:     client,
 		database:   mongoDB,
@@ -25,7 +25,8 @@ func NewMongoArticleRepository(client *mongo.Client, mongoTimeout int, mongoDB s
 	}
 }
 
-func (ma *mongoArticleRepository) StoreArticle(ctx context.Context, article *article.Article) error {
+func (ma *mongoArticleRepository) StoreArticle(ctx context.Context, article *domain.Article) error {
+	log.Println("StoreArticle called")
 	ctx, cancel := context.WithTimeout(context.Background(), ma.timeout)
 	defer cancel()
 	coll := ma.client.Database(ma.database).Collection(ma.collection)
@@ -37,6 +38,8 @@ func (ma *mongoArticleRepository) StoreArticle(ctx context.Context, article *art
 	log.Println(res.InsertedID)
 	return nil
 }
-func (ma *mongoArticleRepository) FindArticleByID(ctx context.Context, id string) (*article.Article, error) {
+func (ma *mongoArticleRepository) FindArticleByID(ctx context.Context, id string) (*domain.Article, error) {
+	log.Println("FindArticleByID called")
+
 	return nil, nil
 }
