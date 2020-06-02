@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/maei/mongodb_mock_hexa/src/article/api"
 	"github.com/maei/mongodb_mock_hexa/src/article/controller"
+	"github.com/maei/mongodb_mock_hexa/src/article/proto"
 	"github.com/maei/mongodb_mock_hexa/src/article/repository"
 	"github.com/maei/mongodb_mock_hexa/src/article/usecase"
 	"github.com/maei/mongodb_mock_hexa/src/clients/grpc"
@@ -37,8 +39,10 @@ func main() {
 	defer conn.Close()
 	e := echo.New()
 
-	articleRepo := repository.NewMongoArticleRepository(mclient, mongoTimeout, mongoDB, mongoColl)
-	articleUseCase := usecase.NewServiceArticle(articleRepo, nil)
+	articleGRPCConn := articlepb.NewArticleAPIClient(conn)
+	articleGRPC := api.NewArticleGRPC(articleGRPCConn)
+	articleRepo := repository.NewArticleRepository(mclient, mongoTimeout, mongoDB, mongoColl)
+	articleUseCase := usecase.NewServiceArticle(articleRepo, articleGRPC)
 	controller.NewArticleController(e, articleUseCase)
 
 	errs := make(chan error, 2)

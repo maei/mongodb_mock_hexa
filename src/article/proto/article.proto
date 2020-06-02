@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package domain;
+
+option go_package = "articlepb";
+
+message ArticleRequest {
+  string name = 1;
+}
+
+message ArticleResponse {
+  string result = 1;
+}
+
+service ArticleAPI {
+  rpc StoreArticle(ArticleRequest) returns (ArticleResponse) {};
+}

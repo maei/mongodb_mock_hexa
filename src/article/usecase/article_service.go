@@ -7,11 +7,11 @@ import (
 )
 
 type serviceArticle struct {
-	repoArticle domain.DAOInterfaceArticle
-	grpcArticle domain.GRPCArticleInterface
+	repoArticle domain.RepositoryArticleInterface
+	grpcArticle domain.APIInterfaceGRPCArticle
 }
 
-func NewServiceArticle(re domain.DAOInterfaceArticle, gr domain.GRPCArticleInterface) domain.ServiceArticleInterface {
+func NewServiceArticle(re domain.RepositoryArticleInterface, gr domain.APIInterfaceGRPCArticle) domain.ServiceArticleInterface {
 	return &serviceArticle{
 		repoArticle: re,
 		grpcArticle: gr,
@@ -24,6 +24,12 @@ func (s *serviceArticle) Store(ctx context.Context, article *domain.Article) err
 		log.Println(storeErr)
 		return storeErr
 	}
+	res, err := s.grpcArticle.SendArticle(ctx, article)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	log.Println(res)
 	return nil
 }
 

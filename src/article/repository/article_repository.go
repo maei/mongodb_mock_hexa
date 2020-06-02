@@ -16,7 +16,7 @@ type mongoArticleRepository struct {
 	collection string
 }
 
-func NewMongoArticleRepository(client *mongo.Client, mongoTimeout int, mongoDB string, mongoColl string) domain.DAOInterfaceArticle {
+func NewArticleRepository(client *mongo.Client, mongoTimeout int, mongoDB string, mongoColl string) domain.RepositoryArticleInterface {
 	return &mongoArticleRepository{
 		client:     client,
 		database:   mongoDB,
