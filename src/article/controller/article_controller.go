@@ -10,20 +10,26 @@ import (
 	"net/http"
 )
 
-type ArticleController struct {
-	ArticleService domain.ServiceArticleInterface
+type ArticleControllerInterface interface {
+	PostArticle(c echo.Context) error
+	FindArticle(c echo.Context) error
 }
 
-func NewArticleController(e *echo.Echo, art domain.ServiceArticleInterface) {
-	handler := &ArticleController{
-		ArticleService: art,
+type articleController struct {
+	articleService domain.ServiceArticleInterface
+}
+
+func NewArticleController(e *echo.Echo, art domain.ServiceArticleInterface) ArticleControllerInterface {
+	handler := &articleController{
+		articleService: art,
 	}
 	e.GET("/articles", handler.FindArticle)
 	e.POST("/articles", handler.PostArticle)
 
+	return handler
 }
 
-func (a *ArticleController) PostArticle(c echo.Context) error {
+func (a *articleController) PostArticle(c echo.Context) error {
 	defer c.Request().Body.Close()
 
 	jsonBody := c.Request().Body
@@ -46,7 +52,7 @@ func (a *ArticleController) PostArticle(c echo.Context) error {
 
 	}
 
-	stoErr := a.ArticleService.Store(context.Background(), art)
+	stoErr := a.articleService.Store(context.Background(), art)
 	if stoErr != nil {
 		log.Println(stoErr)
 		return c.JSON(http.StatusInternalServerError, map[string]string{
@@ -59,7 +65,7 @@ func (a *ArticleController) PostArticle(c echo.Context) error {
 	})
 }
 
-func (a *ArticleController) FindArticle(c echo.Context) error {
+func (a *articleController) FindArticle(c echo.Context) error {
 
 	return nil
 }
