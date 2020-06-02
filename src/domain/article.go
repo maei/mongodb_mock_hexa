@@ -10,7 +10,7 @@ type Article struct {
 }
 
 type GRPCArticleInterface interface {
-	Test()
+	SendArticle()
 }
 
 type ServiceArticleInterface interface {
