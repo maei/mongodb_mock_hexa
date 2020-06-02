@@ -7,6 +7,7 @@ import (
 	"github.com/maei/mongodb_mock_hexa/src/article/controller"
 	"github.com/maei/mongodb_mock_hexa/src/article/repository"
 	"github.com/maei/mongodb_mock_hexa/src/article/usecase"
+	"github.com/maei/mongodb_mock_hexa/src/clients/grpc"
 	"github.com/maei/mongodb_mock_hexa/src/clients/mongodb"
 	"log"
 	"os"
@@ -19,17 +20,24 @@ var (
 	mongoTimeout = 30
 	mongoDB      = "article"
 	mongoColl    = "article_coll"
+	grpcURL      = "localhost:50051"
 )
 
 func main() {
-	client, err := mongodb.NewMongoClient(mongoURL, mongoTimeout)
+	mclient, err := mongodb.NewMongoClient(mongoURL, mongoTimeout)
 	if err != nil {
 		log.Println("error while connecting to mongodb")
 		panic(0)
 	}
+	conn, grpcErr := grpc.NewGRPCClient(grpcURL)
+	if grpcErr != nil {
+		log.Println("error while connecting to gRPC server")
+		panic(0)
+	}
+	defer conn.Close()
 	e := echo.New()
 
-	articleRepo := repository.NewMongoArticleRepository(client, mongoTimeout, mongoDB, mongoColl)
+	articleRepo := repository.NewMongoArticleRepository(mclient, mongoTimeout, mongoDB, mongoColl)
 	articleUseCase := usecase.NewServiceArticle(articleRepo, nil)
 	controller.NewArticleController(e, articleUseCase)
 
@@ -46,7 +54,7 @@ func main() {
 	}()
 
 	log.Printf("Terminated %s", <-errs)
-	client.Disconnect(context.Background())
+	mclient.Disconnect(context.Background())
 }
 
 func httpPort() string {
