@@ -9,7 +9,7 @@ type GRPCArticleInterface struct {
 	mock.Mock
 }
 
-// Test provides a mock function with given fields:
-func (_m *GRPCArticleInterface) Test() {
+// SendArticle provides a mock function with given fields:
+func (_m *GRPCArticleInterface) SendArticle() {
 	_m.Called()
 }
