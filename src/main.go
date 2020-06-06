@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"github.com/maei/mongodb_mock_hexa/src/article/api"
 	"github.com/maei/mongodb_mock_hexa/src/article/controller"
 	"github.com/maei/mongodb_mock_hexa/src/article/proto"
 	"github.com/maei/mongodb_mock_hexa/src/article/repository"
@@ -34,13 +33,13 @@ func main() {
 	conn, grpcErr := grpc.NewGRPCClient(grpcURL)
 	if grpcErr != nil {
 		log.Println("error while connecting to gRPC server")
-		panic(0)
+		//panic(0)
 	}
 	defer conn.Close()
 	e := echo.New()
 
 	articleGRPCConn := articlepb.NewArticleAPIClient(conn)
-	articleGRPC := api.NewArticleGRPC(articleGRPCConn)
+	articleGRPC := controller.NewArticleGRPC(articleGRPCConn)
 	articleRepo := repository.NewArticleRepository(mclient, mongoTimeout, mongoDB, mongoColl)
 	articleUseCase := usecase.NewServiceArticle(articleRepo, articleGRPC)
 	controller.NewArticleController(e, articleUseCase)

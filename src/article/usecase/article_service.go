@@ -11,10 +11,10 @@ type serviceArticle struct {
 	grpcArticle domain.APIInterfaceGRPCArticle
 }
 
-func NewServiceArticle(re domain.RepositoryArticleInterface, gr domain.APIInterfaceGRPCArticle) domain.ServiceArticleInterface {
+func NewServiceArticle(ra domain.RepositoryArticleInterface, ga domain.APIInterfaceGRPCArticle) domain.ServiceArticleInterface {
 	return &serviceArticle{
-		repoArticle: re,
-		grpcArticle: gr,
+		repoArticle: ra,
+		grpcArticle: ga,
 	}
 }
 

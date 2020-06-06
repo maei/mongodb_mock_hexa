@@ -1,4 +1,4 @@
-package api
+package controller
 
 import (
 	"context"
@@ -13,9 +13,9 @@ type articleGRPC struct {
 	art articlepb.ArticleAPIClient
 }
 
-func NewArticleGRPC(articleClient articlepb.ArticleAPIClient) domain.APIInterfaceGRPCArticle {
+func NewArticleGRPC(grpcClient articlepb.ArticleAPIClient) domain.APIInterfaceGRPCArticle {
 	return &articleGRPC{
-		art: articleClient,
+		art: grpcClient,
 	}
 }
 
